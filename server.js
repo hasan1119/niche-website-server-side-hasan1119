@@ -13,7 +13,7 @@ app.use(express.json());
 
 // OPEN API
 app.get("/", async (req, res) => {
-  res.json("server is running!");
+  res.send("server is running!");
 });
 
 // CONNECTION URI
