@@ -29,24 +29,34 @@ async function run() {
     const database = client.db("assignment-12");
     const user_collection = database.collection("users");
     const product_collection = database.collection("products");
+    const order_collection = database.collection("orders");
 
-    //#user add post api
+    //#user add: post api
     app.post("/users", async (req, res) => {
       const result = await user_collection.insertOne(req.body);
       res.json(result);
     });
 
-    //#all products get api
+    //#all products load: get api
     app.get("/products", async (req, res) => {
       const result = await product_collection.find({}).toArray();
       res.json(result);
     });
 
-    //#all products get api
+    //#single data load: get api
     app.get("/placeorder/:id", async (req, res) => {
       const result = await product_collection.findOne({
         _id: ObjectId(req.params.id),
       });
+      res.json(result);
+    });
+
+    //# place order: post api
+    app.post("/placeorder", async (req, res) => {
+      const order = req.body;
+      order.status = "Pending";
+      delete order._id;
+      const result = await order_collection.insertOne(order);
       res.json(result);
     });
   } finally {
