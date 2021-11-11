@@ -77,6 +77,14 @@ async function run() {
       );
       res.json(result.modifiedCount);
     });
+
+    //# delete specific order: delete api
+    app.delete("/placeorder/:id", async (req, res) => {
+      const result = await order_collection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
