@@ -85,6 +85,12 @@ async function run() {
       });
       res.json(result);
     });
+
+    //# add a new product: post api
+    app.post("/addProduct", async (req, res) => {
+      const result = await product_collection.insertOne(req.body);
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
