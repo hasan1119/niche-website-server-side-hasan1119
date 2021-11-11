@@ -62,9 +62,16 @@ async function run() {
 
     //# load all orders: get api
     app.get("/orders", async (req, res) => {
-      const result = await order_collection.find({}).toArray();
+      const email = req.query.email;
+      let result;
+      if (email) {
+        result = await order_collection.find({ email }).toArray();
+      } else {
+        result = await order_collection.find({}).toArray();
+      }
       res.json(result);
     });
+
     //# Change status: put api
     app.put("/updateOrderStatus", async (req, res) => {
       const id = req.body.id;
@@ -78,6 +85,19 @@ async function run() {
       res.json(result.modifiedCount);
     });
 
+    //# update a product: put api
+    app.put("/updateProduct", async (req, res) => {
+      const id = req.query.id;
+      const product = req.body;
+      const result = await product_collection.updateOne(
+        { _id: ObjectId(id) },
+        {
+          $set: product,
+        }
+      );
+      res.json(result);
+    });
+
     //# delete specific order: delete api
     app.delete("/placeorder/:id", async (req, res) => {
       const result = await order_collection.deleteOne({
@@ -89,6 +109,22 @@ async function run() {
     //# add a new product: post api
     app.post("/addProduct", async (req, res) => {
       const result = await product_collection.insertOne(req.body);
+      res.json(result);
+    });
+
+    //# delete a product: delete api
+    app.delete("/deleteProduct/:id", async (req, res) => {
+      const result = await product_collection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.json(result);
+    });
+
+    //#single order load: get api
+    app.get("/updateOne/:id", async (req, res) => {
+      const result = await product_collection.findOne({
+        _id: ObjectId(req.params.id),
+      });
       res.json(result);
     });
   } finally {
