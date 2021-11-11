@@ -59,6 +59,24 @@ async function run() {
       const result = await order_collection.insertOne(order);
       res.json(result);
     });
+
+    //# load all orders: get api
+    app.get("/orders", async (req, res) => {
+      const result = await order_collection.find({}).toArray();
+      res.json(result);
+    });
+    //# Change status: put api
+    app.put("/updateOrderStatus", async (req, res) => {
+      const id = req.body.id;
+      const status = req.body.status;
+      const result = await order_collection.updateOne(
+        { _id: ObjectId(id) },
+        {
+          $set: { status: status },
+        }
+      );
+      res.json(result.modifiedCount);
+    });
   } finally {
     // await client.close();
   }
