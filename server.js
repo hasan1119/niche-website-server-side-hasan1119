@@ -38,6 +38,25 @@ async function run() {
       res.json(result);
     });
 
+    //#user add: post api
+    app.get("/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await user_collection.findOne({ email: email });
+      res.json(result);
+    });
+
+    //# add a new admin: post api
+    app.put("/addAdmin", async (req, res) => {
+      const email = req.body.email;
+      const result = await user_collection.updateOne(
+        { email },
+        {
+          $set: { role: "admin" },
+        }
+      );
+      res.json(result);
+    });
+
     //#all products load: get api
     app.get("/products", async (req, res) => {
       const result = await product_collection.find({}).toArray();
